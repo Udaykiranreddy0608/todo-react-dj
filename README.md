@@ -6,15 +6,15 @@ A Simple TODO app buit using ReactJS and Django
 #### Deployment 
 
 ```
-$ heroku create todo-react-dj
-$ heroku git:remote -a todo-react-dj
-$ heroku buildpacks:add --index 1 heroku/nodejs
+heroku create todo-react-dj
+heroku git:remote -a todo-react-dj
+heroku buildpacks:add --index 1 heroku/nodejs
 ```
 #### Heroku cli scale and status 
 
 ```
-$ heroku ps 
-$ heroku ps:scale web=0
+heroku ps 
+heroku ps:scale web=0
 ```
 
 ### React App
@@ -36,4 +36,4 @@ yarn start
 
 
 ### References for developing app
-[Heroku Docs] (https://devcenter.heroku.com/articles/how-heroku-works)
+[Heroku Docs](https://devcenter.heroku.com/articles/how-heroku-works)
