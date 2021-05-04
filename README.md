@@ -54,9 +54,16 @@ To test the Django app -
 
 ```
 py manage.py startapp todo
-py manage.py migrate
+py manage.py migrate or if migrations are not ready run `py manage.py makemigrations`
 py manage.py runserver
 ```
+### Running django project
+
+```
+source /venv/Scripts/activate
+python manage.py runserver
+```
+
 
 ### References
 
