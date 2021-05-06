@@ -70,3 +70,7 @@ python manage.py runserver
 [Heroku Docs](https://devcenter.heroku.com/articles/how-heroku-works)
 
 [Django](https://docs.djangoproject.com/en/3.2/howto/windows/)
+
+https://dev.to/mdrhmn/deploying-react-django-app-using-heroku-2gfa
+
+https://github.com/mdrhmn/react-dj-todoapp
