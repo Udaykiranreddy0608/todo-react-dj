@@ -23,6 +23,14 @@ heroku ps:scale web=0
 
 ## React App
 
+
+#### install 
+
+```
+brew install node 
+npm install --global yarn
+```
+
 #### Build
 
 ```
