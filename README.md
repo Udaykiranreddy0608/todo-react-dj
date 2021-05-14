@@ -8,10 +8,16 @@ A Simple TODO app buit using ReactJS and Django
 
 #### Setting up heroku environment
 
+Create app in heroku 
+link existing git repo to heroku app to deploy on push 
+add build pack nodejs 
+add buils pack python 
+
 ```
 heroku create todo-react-dj
 heroku git:remote -a todo-react-dj
 heroku buildpacks:add --index 1 heroku/nodejs
+heroku buildpacks:add --index 2 heroku/python
 ```
 
 #### Heroku cli scale and status
