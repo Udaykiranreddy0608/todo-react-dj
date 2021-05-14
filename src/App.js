@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import './App.css';
 import Modal from "./components/Modal";
 import axios from "axios";
 
@@ -7,72 +6,159 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 class App extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
+	constructor(props) {
+		super(props);
+		this.state = {
+			viewCompleted: false,
+			activeItem: {
+				title: "",
+				description: "",
+				completed: false
+			},
+			todoList: []
+		};
+	}
 
-      todolist: []
-    }
+	componentDidMount() {
+		this.refreshList();
+	}
 
-  }
+	refreshList = () => {
+		axios
+			// .get("http://localhost:8000/api/todos/")
+			// Because of proxy in package.json, command be shorten as follows:
+			.get("/api/todos/")
+			.then(res => this.setState({ todoList: res.data }))
+			.catch(err => console.log(err));
+	};
 
-  refreshList = () =>{
-    axios.get("/api/todos/")
-    .then((res) => { this.setState({ todolist: res.data})})
-    .catch(err => console.log(err))
-  }
-  renderTabList = ()  =>{
-    return(
+	displayCompleted = status => {
+		if (status) {
+			return this.setState({ viewCompleted: true });
+		}
+		return this.setState({ viewCompleted: false });
+	};
 
-      <div>
-        renderTabList
-      </div>
-    )
-  }
+	renderTabList = () => {
+		return (
+			<div className="my-5 tab-list">
+				<span
+					onClick={() => this.displayCompleted(true)}
+					className={this.state.viewCompleted ? "active" : ""}
+				>
+					Complete
+            </span>
+				<span
+					onClick={() => this.displayCompleted(false)}
+					className={this.state.viewCompleted ? "" : "active"}
+				>
+					Incomplete
+            </span>
+			</div>
+		);
+	};
+	
+	renderItems = () => {
+		const { viewCompleted } = this.state;
+		const newItems = this.state.todoList.filter(
+			item => item.completed === viewCompleted
+		);
+		return newItems.map(item => (
+			<li
+				key={item.id}
+				className="list-group-item d-flex justify-content-between align-items-center"
+			>
+				<span
+					className={`todo-title mr-2 ${this.state.viewCompleted ? "completed-todo" : ""
+						}`}
+					title={item.description}
+				>
+					{item.title}
+				</span>
+				<span>
+					<button
+						onClick={() => this.editItem(item)}
+						className="btn btn-secondary mr-2"
+					>
+						Edit
+					</button>
+					<button
+						onClick={() => this.handleDelete(item)}
+						className="btn btn-danger"
+					>
+						Delete
+					</button>
+				</span>
+			</li>
+		));
+	};
 
-  renderItemList = () =>{
-    
-    const todolist = this.state.todolist;
-    return todolist.map( item =>(
+	toggle = () => {
+		this.setState({ modal: !this.state.modal });
+	};
 
-      <li>{item.id}
-          
-          {item.title}
-          
-          {item.description}
-          
-          {item.completed}
-      </li>
+	handleSubmit = item => {
+		this.toggle();
+		if (item.id) {
+			axios
+				// Because of proxy in package.json, command be shorten as follows:
+				// .put(`http://localhost:8000/api/todos/${item.id}/`, item)
+				.put(`/api/todos/${item.id}/`, item)
+				.then(res => this.refreshList());
+			return;
+		}
+		axios
+			// Because of proxy in package.json, command be shorten as follows:
+			// .post("http://localhost:8000/api/todos/", item)
+			.post("/api/todos/", item)
+			.then(res => this.refreshList());
+	};
 
-    )
-    
-    )
-  }
+	handleDelete = item => {
+		axios
+			// Because of proxy in package.json, command be shorten as follows:
+			// .delete(`http://localhost:8000/api/todos/${item.id}`)
+			.delete(`/api/todos/${item.id}/`)
+			.then(res => this.refreshList());
+	};
 
-  render() {
-          return (
-            <main className="content">
-            <h1 className="text-black text-center my-4"> Todo App</h1>
-            <div className="row">
-            <div className="col-md-6 col-sm-10 mx-auto p-0">
-            
-            <div className="card p-3">
-              <div class = "">
-                <button className="btn btn-primary"  style={{float: 'right'}} >Add task</button>
-              </div>
-              <div class = "">
-                <button className="btn btn-primary"  onClick = {()=>this.refreshList()} >Refresh</button>
-              </div>
-              {this.renderTabList()}
-              <ul>{this.renderItemList()}</ul>
-            </div>
-            </div>
-            </div>
+	createItem = () => {
+		const item = { title: "", description: "", completed: false };
+		this.setState({ activeItem: item, modal: !this.state.modal });
+	};
 
+	editItem = item => {
+		this.setState({ activeItem: item, modal: !this.state.modal });
+	};
 
-            </main>
-          );
-        }
-        }
-
+	render() {
+		return (
+			<main className="content">
+				<h1 className="text-black text-center "> Todo App </h1>
+				<div className="row ">
+					<div className="col-md-6 col-sm-10 mx-auto p-0">
+						<div className="card p-3">
+							<div className="">
+								<button onClick={this.createItem} className="btn btn-primary" style={{float: 'right'}}>
+									Add task
+                    </button>
+							</div>
+							{this.renderTabList()}
+							<ul className="list-group list-group-flush">
+								{this.renderItems()}
+							</ul>
+						</div>
+					</div>
+				</div>
+				{this.state.modal ? (
+					<Modal
+						activeItem={this.state.activeItem}
+						toggle={this.toggle}
+						onSave={this.handleSubmit}
+					/>
+				) : null}
+			</main>
+		);
+	}
+}
 export default App;
