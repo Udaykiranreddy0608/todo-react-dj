@@ -25,7 +25,8 @@ SECRET_KEY = '5@o+_ml_fg10=tj=ncot3q&2d92ie43vn1^7z&yor^jtd5_r=c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['todo-react-dj.herokuapp.com','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
